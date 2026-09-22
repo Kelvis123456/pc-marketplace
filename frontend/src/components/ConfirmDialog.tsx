@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { IconAlert } from "./icons";
+import { useFocusTrap } from "./useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -10,10 +12,22 @@ interface Props {
 }
 
 export function ConfirmDialog({ open, title, description, confirmLabel = "Eliminar", onConfirm, onCancel }: Props) {
+  const dialogRef = useFocusTrap<HTMLDivElement>(open);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onCancel]);
+
   if (!open) return null;
   return (
     <div className="dialog-backdrop" onClick={onCancel}>
       <div
+        ref={dialogRef}
         className="dialog"
         role="alertdialog"
         aria-modal="true"

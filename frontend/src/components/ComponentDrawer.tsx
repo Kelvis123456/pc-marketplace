@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import type { Componente, DatosComponente } from "../domain/marketplace";
 import { IconAlert, IconClose } from "./icons";
+import { useFocusTrap } from "./useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -11,6 +12,7 @@ interface Props {
 
 export function ComponentDrawer({ open, initial, onClose, onSubmit }: Props) {
   const esEdicion = initial !== null;
+  const drawerRef = useFocusTrap<HTMLDivElement>(open);
 
   const [nombre, setNombre] = useState("");
   const [categoria, setCategoria] = useState("");
@@ -70,7 +72,7 @@ export function ComponentDrawer({ open, initial, onClose, onSubmit }: Props) {
   return (
     <>
       <div className="drawer-backdrop" onClick={onClose} />
-      <div className="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <div ref={drawerRef} className="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
         <div className="drawer-header">
           <h2 className="drawer-title" id="drawer-title">
             {esEdicion ? "Editar componente" : "Agregar componente"}
@@ -81,7 +83,7 @@ export function ComponentDrawer({ open, initial, onClose, onSubmit }: Props) {
         </div>
         <form onSubmit={handleSubmit} className="drawer-body" id="component-form">
           {error && (
-            <div className="form-error-banner">
+            <div className="form-error-banner" role="alert">
               <IconAlert size={14} /> {error}
             </div>
           )}

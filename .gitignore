@@ -6,3 +6,11 @@ frontend/dist/
 .env
 .env.*
 !.env.example
+
+frontend/.agents/
+frontend/.claude/
+frontend/.codebuddy/
+frontend/.continue/
+frontend/.junie/
+frontend/.kiro/
+frontend/skills-lock.json
